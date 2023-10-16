@@ -1,0 +1,82 @@
+DDL (Data Definition Language)
+  데이터의 스키마 객체를 생성, 변경, 제거하거나 권한의 부여나 박탈 주석 자료버림등을 수행
+  데이터베이스 구조를 정의하고 관리하는데 사용됨
+  객체를 생성, 수정, 삭제..
+
+* 스키마
+-데이터베이스의 구조와 제약 조건에 관한 전반적인 명세를 기술한 메타데이터의 집합입니다. 
+좀 더 자세하게 말하면 DB를 구성하는 데이터 개체(Entity), 속성(Attribute), 관계(Relationship) 및 데이터 조작 시 데이터 값들이 갖는 제약 조건 등에 관해 전반적으로 정의한 것이 바로 스키마입니다.
+>메타데이터란 많은 양의 데이터를 수집, 저장, 분석할 수 있도록 일관된 방식으로 구조화된, 다른 데이터를 설명하는 데이터입니다. ( DB를 설명하는 데이터라는 뜻이 됩니다. )
+
+<대표적인 명령문>
+CREATE(생성), ALTER(변경), DROP(제거), COMMENT(주석), GRANT(권한 부여), REVOKE(권한 박탈)
+TRUNCATE(자료 버림)
+
+각 문장은 CREATE, ALTER, TRUNCATE, GRANT, REVOKE, COMMENT 등으로 시작함
+
+
+1. CREATE(생성)
+
+    CREATE TABLE : 새로운 테이블 생성
+    CREATE VIEW : 가상의 테이블을 생성해서 데이터 베이스의 일부 데이터에 대한 뷰를 정의함
+    CREATE DATABASE : 새로운 데이터베이스를 생성
+    CREATE INDEX : 인덱스를 생성하여 데이터 검색 속도 향상시킴
+
+2. ALTER(수정)
+
+    ALTER TABLE: 이미 존재하는 테이블의 구조를 변경 > 열 추가, 수정, 삭제, 제약 조건 등을 변경 가능
+    ALTER INDEX : 이미 존재하는 인덱스의 구조를 변경
+      
+    ALTER TABLE 테이블이름 MODIFY(변경하고자하는 열의 이름 문자열유형(수정값 BYTE));
+    예제코드)
+    ALTER TABLE EMPLOYEE MODIFY(JOB VARCHAR2(20 BYTE));
+    코드설명)
+    'EMPLOYEE' 테이블에서 'JOB' 열에 입력된 값이 열의 최대 길이를 초과하여 문제가 발생했을 경우 ALTER와 MODIFY를 작성하여 JOB 열의 크기를 20 BYTE로 변경할 수 있다.
+
+    ALTER SESSION SET "_ORACLE_SCRIPT" = TRUE; // Oracle DataBase에서 "_ORACLE_SCRIPT" 모드 활성화
+
+      > _ORACLE_SCRIPT : Oracle DataBase에서 12c 이상 버전에서 사용할 수 있는 특별한 모드
+      
+      > SESSION (세션) : 
+        컴퓨터 네트워크 분야에서 사용되는 용어로, 사용자 또는 클라이언트 서버 간의 연결을 나타냄                     
+        데이터베이스는 사용자 또는 응용프로그램이 데이터베이스 서버에 연결                   
+        상호작용 하는 동안 작업의 단위 의미                     
+        각 세션은 독립적인 환경을 가지며, 데이터베이스 서버와 통신을 담당
+
+      > SET (설정) : 
+        설정 또는 조정하는데 사용
+        변수 설정 : 변수값을 설정하거나 변경하는데 사용 ex) SET Salary = 5000; // 변수를 5000으로 
+
+
+3. DROP(삭제)
+    -데이터베이스에서 객체(테이블, 뷰, 인덱스, 사용자 등)를 삭제하는데 사용되는 sql 명령어. 영구삭제
+    DROP TABLE : 테이블 삭제  
+    DROP VIEW : 뷰 삭제      
+    DROP DATABASE : DB 삭제  
+    DROP INDEX : 인덱스 삭제 
+
+    //DROP TABLE 테이블이름;
+    //DROP VIEW 뷰이름;
+    //DROP INDEX 인덱스이름;
+    //DROP USER 사용자이름;
+
+3-1. CASCADE : 
+    -해당 명령이 연결된 객체 또는 데이터 영향 주는 방식 지정
+    -주로 삭제 명령으로 사용
+    -삭제 명령이 관련된 모든 객체나 데이터를 삭제
+    -DROP TABLE 부모테이블 CASCADE CONSTRAINTS;
+
+4. GRANT(권한 부여)
+    -권한을 부여하는 키워드로,
+    -SELECT, INSERT, UPDATE, DELETE, CREATE TALBLE 등.. 수행하는 권한을 지정할 수 있음
+
+     GRANT 권한 TO 역할 또는 사용자 [WITH GRANT OPTION];
+
+<권한 종류>
+  CREATE SESSION : 사용자가 데이터베이스에 로그인하고 세션을 생성하는데 필요한 권한 > 사용자에 데이터베이스 로그인 권한 부여
+  CREATE ANY TABLE : 사용자가 데이터베이스 내에서 어떤 스키마나 테이블을 생성할 수 있는 권한 > 사용자는 어떤 스키마에서든 테이블을 만들 수 있음
+    **SKEME(스키마) : 
+  CONNECT : 사용자가 데이터베이스에 연결하는데 필요한 권한
+  RESOURCE : 사용자가 테이블, 시퀀스 등의 리소스를 생성할 수 있는 권한 부여
+    **SQUENCE(시퀀스) :
+  DBA : 데이터베이스 관리자 권한 (최고의 권한), 사용자에게 거의 모든 데이터베이스 작업을 수행할 수 있는 권한을 부여 > 보안상 주의 필요 (주로 DB 관리자에게 부여되는 권한)
